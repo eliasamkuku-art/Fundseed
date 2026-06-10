@@ -308,7 +308,8 @@ export const tanzanianScholars: ScholarshipAlumnus[] = [
     year: "Alumni 2024",
     avatarChar: "ES",
     avatarColor: "bg-amber-600 text-white",
-    city: "Melbourne, Australia"
+    city: "Melbourne, Australia",
+    image: "/images/scholar_elizabeth_1781126855245.png"
   },
   {
     id: "al-ibrahim",
@@ -321,7 +322,8 @@ export const tanzanianScholars: ScholarshipAlumnus[] = [
     year: "Alumni 2023",
     avatarChar: "IM",
     avatarColor: "bg-red-600 text-white",
-    city: "Tokyo, Japan"
+    city: "Tokyo, Japan",
+    image: "/images/scholar_ibrahim_1781126870423.png"
   }
 ];
 

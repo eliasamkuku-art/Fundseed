@@ -3485,9 +3485,16 @@ export default function App() {
                   </div>
                   
                   <div className="grid gap-4 md:grid-cols-2">
-                     <div className="border border-stone-200 p-5 rounded-xl hover:shadow-md transition bg-stone-50">
+                     <div className="border border-stone-200 p-5 rounded-xl hover:shadow-md transition bg-stone-50 group">
                        <div className="flex items-center gap-3 mb-3">
-                         <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">EM</div>
+                         <div className="w-12 h-12 relative rounded-full overflow-hidden flex items-center justify-center text-white font-bold text-lg shadow-sm border border-stone-100">
+                           <img 
+                             src="/images/elias_agri_success_1781126686602.png" 
+                             alt="Elias Mnanka" 
+                             className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                             referrerPolicy="no-referrer"
+                           />
+                         </div>
                          <div>
                            <p className="font-bold text-stone-900">Elias Mnanka</p>
                            <p className="text-xs text-stone-500">Kijani Agri Mentorship</p>
@@ -3497,9 +3504,16 @@ export default function App() {
                        <button className="mt-4 w-full bg-white border border-stone-300 text-stone-700 hover:bg-stone-100 py-2 rounded-lg text-xs font-bold transition">Tuma Ujumbe</button>
                      </div>
 
-                     <div className="border border-stone-200 p-5 rounded-xl hover:shadow-md transition bg-stone-50">
+                     <div className="border border-stone-200 p-5 rounded-xl hover:shadow-md transition bg-stone-50 group">
                        <div className="flex items-center gap-3 mb-3">
-                         <div className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">FK</div>
+                         <div className="w-12 h-12 relative rounded-full overflow-hidden flex items-center justify-center text-white font-bold text-lg shadow-sm border border-stone-100">
+                           <img 
+                             src="/images/farida_scholar_success_1781126670536.png" 
+                             alt="Farida Kamugisha" 
+                             className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                             referrerPolicy="no-referrer"
+                           />
+                         </div>
                          <div>
                            <p className="font-bold text-stone-900">Farida Kamugisha</p>
                            <p className="text-xs text-stone-500">Tech Sis Tz / UK Scholar</p>
