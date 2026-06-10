@@ -401,7 +401,7 @@ export const africanTestimonials: Testimonial[] = [
     story: 'Nilitumia mfumo huu sio tu kupata Business Plan, bali pia connection za watu waliofanikiwa na Scholarships. Nilijaza fomu zangu kwa usahihi kwa kutumia muongozo wao. Sasa niko UK nachukua Master’s degree yangu bure kabisa! FundSeed ni mwokozi!',
     avatarChar: 'F',
     avatarColor: 'bg-pink-500',
-    image: ''
+    image: '/images/farida_scholar_success_1781126670536.png'
   },
   {
     id: 'test-6',
@@ -412,7 +412,7 @@ export const africanTestimonials: Testimonial[] = [
     story: 'Nilikuwa nina kilimo kigumu lakini baada ya kukutana na menta kupitia platform ya FundSeed, mwelekeo ulibadilika. Walinishauri jinsi ya kusimamisha brand yangu vizuri. Mfumo huu unaunganisha watu zaidi ya kutoa ruzuku kavukavu.',
     avatarChar: 'E',
     avatarColor: 'bg-blue-600',
-    image: ''
+    image: '/images/elias_agri_success_1781126686602.png'
   }
 ];
 
