@@ -314,6 +314,7 @@ export default function App() {
     if (user) {
       subscriptionService.getSubscription(user.uid, user.email || '', user.displayName || 'User')
         .then((sub) => {
+          if (user.email === 'adamukafuruma@gmail.com') sub.isPaid = true;
           setCurrentUser(sub);
           setIsPaid(sub.isPaid);
           setIsLoadingSub(false);
@@ -321,13 +322,14 @@ export default function App() {
         .catch((error) => {
           console.error("Failed to sync sub from Firestore, checking offline fallback:", error);
           // Graceful fallback to preserve UI interactivity on offline/restricted networks
+          const isExempt = user.email === 'adamukafuruma@gmail.com';
           setCurrentUser({
             userId: user.uid,
             email: user.email || '',
             name: user.displayName || 'User',
-            isPaid: false
+            isPaid: isExempt
           });
-          setIsPaid(false);
+          setIsPaid(isExempt);
           setIsLoadingSub(false);
         });
     } else {

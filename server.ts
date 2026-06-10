@@ -56,15 +56,17 @@ function getAiClient(): GoogleGenAI {
 }
 
 // Helper function to retry API calls on 503 errors
-async function generateContentWithRetry(ai: any, params: any, retries = 3): Promise<any> {
+async function generateContentWithRetry(ai: any, params: any, retries = 5): Promise<any> {
   try {
     return await ai.models.generateContent(params);
   } catch (error: any) {
-    // Check if error is 503
-    if (error.status === 503 || (error.message && error.message.includes('503'))) {
+    // Check if error is 503 or 429
+    if (error.status === 503 || error.status === 429 || (error.message && (error.message.includes('503') || error.message.includes('429')))) {
       if (retries > 0) {
-        console.log(`Gemini API 503 error, retrying... (${retries} attempts left)`);
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        console.log(`Gemini API generateContent issue (status: ${error.status}), retrying... (${retries} attempts left)`);
+        // Exponential backoff
+        const delay = (6 - retries) * 3000;
+        await new Promise(resolve => setTimeout(resolve, delay));
         return generateContentWithRetry(ai, params, retries - 1);
       }
     }
@@ -73,15 +75,17 @@ async function generateContentWithRetry(ai: any, params: any, retries = 3): Prom
 }
 
 // Helper function to retry chat messages on 503 errors
-async function sendMessageWithRetry(chat: any, message: any, retries = 3): Promise<any> {
+async function sendMessageWithRetry(chat: any, message: any, retries = 5): Promise<any> {
   try {
     return await chat.sendMessage(message);
   } catch (error: any) {
-    // Check if error is 503
-    if (error.status === 503 || (error.message && error.message.includes('503'))) {
+    // Check if error is 503 or 429
+    if (error.status === 503 || error.status === 429 || (error.message && (error.message.includes('503') || error.message.includes('429')))) {
       if (retries > 0) {
-        console.log(`Gemini API chat 503 error, retrying... (${retries} attempts left)`);
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        console.log(`Gemini API chat issue (status: ${error.status}), retrying... (${retries} attempts left)`);
+        // Exponential backoff
+        const delay = (6 - retries) * 3000;
+        await new Promise(resolve => setTimeout(resolve, delay));
         return sendMessageWithRetry(chat, message, retries - 1);
       }
     }
@@ -434,7 +438,11 @@ Mpango huu wa biashara uandikiwe katika mtindo wa Markdown (Markdown format) uki
     res.json({ result: response.text });
   } catch (error: any) {
     console.error('Business plan generation error:', error);
-    res.status(500).json({ error: error.message || 'Hitilafu ya kiufundi imetokea wakati wa kuzalisha andiko.' });
+    if (error.status === 429) {
+      res.status(429).json({ error: 'Umetumia kikomo cha matumizi ya bure ya AI kwa leo. Tafadhali jaribu tena kesho au subiri kidogo.' });
+    } else {
+      res.status(500).json({ error: error.message || 'Hitilafu ya kiufundi imetokea wakati wa kuzalisha andiko.' });
+    }
   }
 });
 
@@ -811,7 +819,7 @@ Mazingira ya sasa kuhusu mambo ya ruzuku (ikiwa yapo): ${contextData || 'Hakuna 
     }
     fullPrompt += `Mteja: ${message}`;
 
-    const response = await sendMessageWithRetry(chat, fullPrompt);
+    const response = await sendMessageWithRetry(chat, { message: fullPrompt });
 
     res.json({ text: response.text });
   } catch (error: any) {

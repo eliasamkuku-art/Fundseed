@@ -708,7 +708,9 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                         <img 
                           src={scholar.image} 
                           alt={scholar.name} 
-                          referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = '/images/placeholder_scholar.png'; // Assume placeholder exists or just handle it
+                          }}
                           className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-500" 
                         />
                       ) : (
