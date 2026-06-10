@@ -1,0 +1,81 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered user profile with subscription status",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "isPaid": { "type": "boolean" },
+        "registeredAt": { "type": "string", "format": "date-time" },
+        "isAdmin": { "type": "boolean" }
+      },
+      "required": ["id", "name", "email", "isPaid"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Subscription payment transaction record",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed"] },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "reference": { "type": "string" }
+      },
+      "required": ["userId", "amount", "status", "timestamp"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Message in the live support chat",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "sender": { "type": "string" },
+        "senderEmail": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["text", "sender", "senderEmail", "timestamp"]
+    },
+    "Opportunity": {
+      "title": "Opportunity",
+      "description": "Scholarship or Grant opportunity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "provider": { "type": "string" },
+        "amount": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "eligibility": { "type": "array", "items": { "type": "string" } },
+        "deadline": { "type": "string" },
+        "origin": { "type": "string" },
+        "link": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "provider", "category"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/payments/{paymentId}": {
+      "schema": "Payment",
+      "description": "Payment records"
+    },
+    "/chat_messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Support chat messages"
+    },
+    "/opportunities/{opportunityId}": {
+      "schema": "Opportunity",
+      "description": "Scholarship and Grant opportunities"
+    }
+  }
+}

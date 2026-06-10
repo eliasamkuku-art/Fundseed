@@ -1,0 +1,8 @@
+{
+  "name": "FundSeed",
+  "description": "Jukwaa la kidijitali la kuandaa Business Plans, Pitch Decks kwa kutumia AI na kufikia fursa za ufadhili (Grants & Funding) Tanzania.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

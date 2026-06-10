@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Auth helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // System-level write helper (Secure server-to-db bypass with key)
+    function isSystemAction() {
+      return request.resource.data.get('systemKey', '') == "FundSeed_Server_Admin_Secure_Key_2026";
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email == "adamukafuruma@gmail.com";
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isOwner(userId) 
+        || isSystemAction() 
+        || isAdmin();
+      allow update: if isOwner(userId) 
+        || isSystemAction() 
+        || isAdmin();
+    }
+
+    // Payments
+    match /payments/{paymentId} {
+      allow read: if true;
+      allow create: if isSystemAction() || (isSignedIn() && request.resource.data.get('tenantId', '') == request.auth.uid && request.resource.data.get('status', '') == 'PENDING');
+      allow update: if isSystemAction() || isAdmin();
+    }
+
+    // Chat Messages
+    match /chat_messages/{messageId} {
+      allow read, write: if isSignedIn() && (
+        (resource == null || resource.data.sessionId == request.auth.uid) ||
+        (request.resource == null || request.resource.data.sessionId == request.auth.uid) ||
+        request.auth.token.email == "adamukafuruma@gmail.com"
+      );
+    }
+
+    // Opportunities
+    match /opportunities/{opportunityId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Contact messages (ContactForm.tsx)
+    match /messages/{messageId} {
+      allow create: if true;
+      allow read, write: if isAdmin();
+    }
+
+    // Client action logs (logger.ts)
+    match /logs/{logId} {
+      allow create: if true;
+      allow read, write: if isAdmin();
+    }
+  }
+}

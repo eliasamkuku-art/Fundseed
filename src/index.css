@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  html {
+    @apply text-[16px] antialiased scroll-smooth;
+  }
+  body {
+    @apply bg-stone-50 text-stone-800 overflow-x-hidden;
+  }
+  button, a {
+    @apply touch-manipulation;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    @apply tracking-tight;
+  }
+}
+
+/* Professional Print Styles */
+@media print {
+  /* Hide all non-essential UI elements */
+  nav, button, footer, .no-print, [role="tablist"], .sidebar, .support-chat-bubble {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: #1a1a1a !important;
+    font-family: serif !important; /* Professional serif font for business docs */
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .printable-content {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    max-height: none !important;
+  }
+
+  /* Reset layout for print */
+  .mx-auto, .max-w-7xl, .p-4, .p-6, .p-8 {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Professional Markdown Styles for Print */
+  .prose {
+    max-width: 100% !important;
+  }
+
+  h1 { font-size: 28pt !important; font-weight: bold !important; margin-bottom: 30pt !important; border-bottom: 2pt solid #000 !important; padding-bottom: 10pt !important; text-align: center; }
+  h2 { font-size: 20pt !important; font-weight: bold !important; margin-top: 25pt !important; margin-bottom: 15pt !important; border-bottom: 1pt solid #ccc !important; }
+  h3 { font-size: 16pt !important; font-weight: bold !important; margin-top: 20pt !important; margin-bottom: 10pt !important; color: #333 !important; }
+  p, li { font-size: 12pt !important; line-height: 1.6 !important; margin-bottom: 12pt !important; }
+  
+  /* Ensure page breaks don't cut off content awkwardly */
+  h1, h2, h3 { page-break-after: avoid; }
+  p, li { page-break-inside: auto; }
+  
+  /* Branding Footer for Print */
+  .print-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 9pt;
+    color: #666;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+  }
+}
+
