@@ -1324,7 +1324,7 @@ export default function App() {
             {/* Textured background photo of diverse business professional people collaborating */}
             <div className="absolute inset-0 z-0">
               <img
-                src="/src/assets/images/hero_background_1781078300010.png"
+                src="/images/hero_background_1781078300010.png"
                 alt="Diverse business professional people collaborating"
                 className="w-full h-full object-cover opacity-35 animate-fade-in"
                 referrerPolicy="no-referrer"

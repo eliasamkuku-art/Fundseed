@@ -357,7 +357,7 @@ export const africanTestimonials: Testimonial[] = [
     story: 'Tulikuwa tukisindika mpunga kienyeji tu ndipo nilipotumia zana ya Smart-Draft ya FundSeed kuandaa andiko la mradi na kuomba ruzuku ya USADF. Tulithibitishwa na tukafanikiwa kupata milioni 35 za kununulia mashine mpya ya kisasa! FundSeed kilitusaidia kuonekana kitaalamu.',
     avatarChar: 'N',
     avatarColor: 'bg-emerald-500',
-    image: '/src/assets/images/neema_agri_success_1780929434002.png'
+    image: '/images/neema_agri_success_1780929434002.png'
   },
   {
     id: 'test-2',
@@ -368,7 +368,7 @@ export const africanTestimonials: Testimonial[] = [
     story: 'Kujaza fomu za kuomba mikopo kwenye taasisi kubwa kila siku kulikuwa kunaniletea kichwa kuuma kwa sababu sikuwa na Business Plan rasmi. Kupitia FundSeed nilijibu maswali kule kwenye AI Assistant ikazalisha mpango biashara wenye mpangilio makini sana. SIDO walikubali andiko langu mara moja!',
     avatarChar: 'S',
     avatarColor: 'bg-indigo-500',
-    image: '/src/assets/images/salum_waste_success_1780929449875.png'
+    image: '/images/salum_waste_success_1780929449875.png'
   },
   {
     id: 'test-3',
@@ -379,7 +379,7 @@ export const africanTestimonials: Testimonial[] = [
     story: 'Nilikuwa na wazo la kuuza asali ila sikuwa najua namna ya kuliwasilisha. Ada ya 20,000 TZS ya FundSeed niliyolipa ndiyo iliyotengeneza mabadiliko ya historia yangu. Niliandaa Pitch Deck safi sana kwa kutumia Smart-Draft. TEF waliona andiko langu likajazwa na weledi mkubwa.',
     avatarChar: 'M',
     avatarColor: 'bg-amber-500',
-    image: '/src/assets/images/mwasiti_honey_success_1780929465344.png'
+    image: '/images/mwasiti_honey_success_1780929465344.png'
   },
   {
     id: 'test-4',
@@ -390,7 +390,7 @@ export const africanTestimonials: Testimonial[] = [
     story: 'Kama msanidi programu na mbunifu wa mazingira, sikuwa najua nyanja za fedha za biashara ya vigae vya kurejesha mazingira. Jukwaa la FundSeed lilinipa mwongozo mzima na mifano ya kujibu maswali magumu ya kadi ya bodi ya mikopo. Leo tunazalisha vyema Arusha.',
     avatarChar: 'J',
     avatarColor: 'bg-teal-500',
-    image: '/src/assets/images/john_tiles_success_1780929479320.png'
+    image: '/images/john_tiles_success_1780929479320.png'
   },
   {
     id: 'test-5',

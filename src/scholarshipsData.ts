@@ -253,7 +253,7 @@ export const tanzanianScholars: ScholarshipAlumnus[] = [
     avatarChar: "NK",
     avatarColor: "bg-teal-600 text-white",
     city: "Oxford, Uingereza (UK)",
-    image: "/src/assets/images/scholar_neema_1780944133268.png"
+    image: "/images/scholar_neema_1780944133268.png"
   },
   {
     id: "al-edwin",
@@ -267,7 +267,7 @@ export const tanzanianScholars: ScholarshipAlumnus[] = [
     avatarChar: "EM",
     avatarColor: "bg-blue-600 text-white",
     city: "Cambridge, Massachusetts (USA)",
-    image: "/src/assets/images/scholar_edwin_1780944146763.png"
+    image: "/images/scholar_edwin_1780944146763.png"
   },
   {
     id: "al-amina",
@@ -281,7 +281,7 @@ export const tanzanianScholars: ScholarshipAlumnus[] = [
     avatarChar: "AJ",
     avatarColor: "bg-purple-600 text-white",
     city: "Munich, Ujerumani (Germany)",
-    image: "/src/assets/images/scholar_amina_1780944159515.png"
+    image: "/images/scholar_amina_1780944159515.png"
   },
   {
     id: "al-juma",
@@ -295,7 +295,7 @@ export const tanzanianScholars: ScholarshipAlumnus[] = [
     avatarChar: "JR",
     avatarColor: "bg-indigo-600 text-white",
     city: "Paris & Barcelona, Ulaya",
-    image: "/src/assets/images/scholar_juma_1780944174075.png"
+    image: "/images/scholar_juma_1780944174075.png"
   },
   {
     id: "al-elizabeth",
