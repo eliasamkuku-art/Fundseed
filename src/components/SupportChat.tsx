@@ -23,11 +23,13 @@ export default function SupportChat({ user }: { user: any }) {
   }, [messages]);
 
   useEffect(() => {
-    if (!user) return;
+    const sessionId = user?.uid;
+    if (!sessionId) return;
 
     const q = query(
         collection(db, 'chat_messages'), 
-        where('sessionId', '==', user.uid),
+        where('sessionId', '==', sessionId),
+        where('chatType', '==', 'support'),
         orderBy('timestamp', 'asc')
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -42,6 +44,20 @@ export default function SupportChat({ user }: { user: any }) {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  if (!user) {
+    return (
+      <div className="bg-white border border-stone-200 rounded-3xl p-8 shadow-xl text-center space-y-4">
+        <div className="h-16 w-16 rounded-full bg-stone-100 flex items-center justify-center mx-auto">
+          <MessageCircle className="h-8 w-8 text-stone-400" />
+        </div>
+        <div className="space-y-2">
+          <h4 className="text-sm font-bold text-stone-900">Tafadhali Ingia</h4>
+          <p className="text-xs text-stone-500 max-w-[200px] mx-auto">Unatakiwa kuingia kwenye akaunti yako ili kuanza mazungumzo na timu yetu.</p>
+        </div>
+      </div>
+    );
+  }
+
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
@@ -51,6 +67,7 @@ export default function SupportChat({ user }: { user: any }) {
       sessionId: user.uid,
       sender: user.name || 'Anonymous',
       senderEmail: user.email || 'anonymous@fundseed.com',
+      chatType: 'support',
       timestamp: serverTimestamp()
     });
     setNewMessage('');
@@ -74,7 +91,7 @@ export default function SupportChat({ user }: { user: any }) {
             <div className={`p-4 rounded-2xl max-w-[85%] text-sm ${msg.senderEmail === user.email ? 'bg-emerald-600 text-white rounded-br-none' : 'bg-stone-100 text-stone-800 rounded-bl-none'}`}>
               <p>{msg.text}</p>
             </div>
-            <span className="text-[10px] text-stone-400 mt-1 px-1">{msg.sender}</span>
+            <span className="text-[10px] text-stone-500 mt-1 px-1">{msg.sender}</span>
           </div>
         ))}
         <div ref={chatEndRef} />

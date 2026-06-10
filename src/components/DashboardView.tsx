@@ -37,7 +37,8 @@ import {
   Search,
   Filter,
   Printer,
-  Building2
+  Building2,
+  Bot
 } from 'lucide-react';
 import { SkeletonPremiumCard } from './SkeletonCard';
 import { uiTranslations } from '../translations';
@@ -143,7 +144,6 @@ export default function DashboardView({
   const [editField, setEditField] = useState(currentUser?.field || '');
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [showMsaidizi, setShowMsaidizi] = useState(false);
 
   React.useEffect(() => {
     if (currentUser) {
@@ -453,7 +453,7 @@ export default function DashboardView({
   const clientPortfolioDrafts = savedDrafts.filter(d => d.userEmail.toLowerCase() === currentUser?.email?.toLowerCase());
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8 animate-fade-in text-stone-900">
       
       <div className={`flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white border border-stone-200 p-5 rounded-2xl shadow-sm ${viewingDraftContent ? 'no-print' : ''}`}>
         <div className="flex items-center space-x-3.5">
@@ -502,7 +502,7 @@ export default function DashboardView({
             <div className="space-y-1.5">
               <span className="text-emerald-700 text-xs font-bold uppercase tracking-widest">{isEn ? "AUTHENTICATION" : "UTHIBITISHO WA CHOMBO"}</span>
               <h3 className="text-2xl font-black text-stone-900 font-display leading-tight">{uiTranslations.authLoginTitle[lang]}</h3>
-              <p className="text-stone-500 text-xs leading-relaxed">{uiTranslations.authLoginDesc[lang]}</p>
+              <p className="text-stone-700 text-xs leading-relaxed">{uiTranslations.authLoginDesc[lang]}</p>
             </div>
             <form onSubmit={handleAuthSubmit} className="space-y-4">
               <div className="space-y-1 text-xs font-bold text-stone-700">
@@ -998,8 +998,15 @@ export default function DashboardView({
                         <span>AI Drafting Terminal</span>
                       </h4>
                       {aiResult && (
-                        <div className="flex items-center gap-3">
-                           <button onClick={handleCopyToClipboard} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-100 text-stone-600 text-[10px] font-bold hover:bg-stone-200 transition-all">
+                        <div className="flex items-center gap-2.5">
+                           <button 
+                             onClick={() => window.dispatchEvent(new CustomEvent('open-ai-assistant'))}
+                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-900 text-white text-[10px] font-bold hover:bg-stone-800 transition-all shadow-sm"
+                           >
+                             <Bot className="h-3 w-3" />
+                             <span>{isEn ? 'Ask Assistant' : 'Uliza Msaidizi'}</span>
+                           </button>
+                           <button onClick={handleCopyToClipboard} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-100 text-stone-600 text-[10px] font-bold hover:bg-stone-200 transition-all border border-stone-200">
                              {copied ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
                              <span>{copied ? 'Copied' : (isEn ? 'Copy' : 'Nakili')}</span>
                            </button>
@@ -1050,8 +1057,8 @@ export default function DashboardView({
                         <div className="h-full flex flex-col items-center justify-center text-center p-12 space-y-6 opacity-30 select-none">
                            <Grid className="h-24 w-24 text-stone-200 stroke-[0.5]" />
                            <div className="space-y-1.5">
-                             <p className="text-sm font-bold text-stone-400 capitalize underline decoration-stone-200 underline-offset-4">{isEn ? 'Waiting for your command' : 'Inangojea maagizo yako'}</p>
-                             <p className="text-[10px] text-stone-400 max-w-xs">{isEn ? 'Fill in the form on the left and click generate to see the magic happen.' : 'Jaza fomu iliyopo kushoto kisha bonyeza kitufe cha zalisha kuona matokeo.'}</p>
+                             <p className="text-sm font-bold text-stone-600 capitalize underline decoration-stone-200 underline-offset-4">{isEn ? 'Waiting for your command' : 'Inangojea maagizo yako'}</p>
+                             <p className="text-[10px] text-stone-600 max-w-xs">{isEn ? 'Fill in the form on the left and click generate to see the magic happen.' : 'Jaza fomu iliyopo kushoto kisha bonyeza kitufe cha zalisha kuona matokeo.'}</p>
                            </div>
                         </div>
                       )}
@@ -1060,7 +1067,7 @@ export default function DashboardView({
                     {aiResult && (
                       <div className="mt-4 pt-4 border-t border-stone-50 bg-stone-50/50 -mx-6 -mb-6 p-6 flex items-center justify-center gap-6">
                         <div className="flex items-center gap-1.5">
-                          <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">{isEn ? 'Rate this draft:' : 'Tathmini matokeo:'}</p>
+                          <p className="text-[10px] font-bold text-stone-600 uppercase tracking-widest">{isEn ? 'Rate this draft:' : 'Tathmini matokeo:'}</p>
                           <div className="flex items-center gap-1">
                             <button 
                               onClick={() => setFeedbackGiven('up')}
@@ -1369,37 +1376,7 @@ export default function DashboardView({
         </div>
       )}
 
-      {/* Fundseed Msaidizi Floating Action Button */}
-      {currentUser && (
-        <button
-          onClick={() => setShowMsaidizi(true)}
-          className="fixed bottom-6 right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-4 shadow-xl transition-transform hover:scale-105 group"
-        >
-          <div className="relative flex items-center justify-center">
-             <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
-             </svg>
-             <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-amber-400 rounded-full border-2 border-emerald-600 animate-pulse"></div>
-          </div>
-          <span className="absolute right-full mr-4 bg-stone-900 text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-            Fundseed Msaidizi
-          </span>
-        </button>
-      )}
-
-      {/* Msaidizi Chat Modal */}
-      {showMsaidizi && (
-        <MsaidiziModal 
-          onClose={() => setShowMsaidizi(false)} 
-          isPaid={isPaid}
-          currentUser={currentUser}
-          onUpgradeRequest={() => {
-            setShowMsaidizi(false);
-            onUnlockPremium();
-          }}
-          contextData={JSON.stringify(dbOpps.map(opp => ({ title: opp.title, provider: opp.provider, amount: opp.amount, deadline: opp.deadline, category: opp.category })))}
-        />
-      )}
+      {/* Msaidizi Chat Modal (Now Global in App.tsx) */}
     </div>
   );
 }

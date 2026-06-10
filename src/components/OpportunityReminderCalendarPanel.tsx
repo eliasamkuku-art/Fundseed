@@ -161,7 +161,7 @@ export default function OpportunityReminderCalendarPanel({
             <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500">
               {isEn ? 'Your Deadlines Calender & Reminders' : 'Kalenda na Vikumbusho vyako vya Makataa'}
             </h3>
-            <p className="text-[11px] text-stone-605">
+            <p className="text-[11px] text-stone-800 font-medium">
               {isEn 
                 ? 'Your actively flagged funding and grant application tracking pipelines' 
                 : 'Fursa zilizoteuliwa kukumbushwa na mhudumiaji ili kutozipitisha tarehe'

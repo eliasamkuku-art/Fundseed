@@ -36,12 +36,13 @@ export const MsaidiziModal: React.FC<MsaidiziModalProps> = ({ onClose, contextDa
 
   // Listen to Firestore real-time updates for chat lessons of this user
   useEffect(() => {
-    if (!currentUser) return;
+    const sessionId = currentUser?.userId || currentUser?.uid;
+    if (!sessionId) return;
     
-    const sessionId = currentUser.userId || currentUser.uid || currentUser.uid;
     const q = query(
       collection(db, 'chat_messages'),
       where('sessionId', '==', sessionId),
+      where('chatType', '==', 'ai'),
       orderBy('createdAt', 'asc')
     );
 
@@ -67,12 +68,13 @@ export const MsaidiziModal: React.FC<MsaidiziModalProps> = ({ onClose, contextDa
 
   // Track remaining questions for today
   useEffect(() => {
-    if (!currentUser) return;
+    const sessionId = currentUser?.userId || currentUser?.uid;
+    if (!sessionId) return;
 
     const fetchLimits = async () => {
       try {
         const todayStr = new Date().toISOString().split('T')[0];
-        const userDocRef = doc(db, 'users', currentUser.userId || currentUser.uid);
+        const userDocRef = doc(db, 'users', sessionId);
         const userSnap = await getDoc(userDocRef);
         
         if (userSnap.exists()) {
@@ -163,6 +165,7 @@ export const MsaidiziModal: React.FC<MsaidiziModalProps> = ({ onClose, contextDa
         userName,
         role: 'user',
         text: userMessage,
+        chatType: 'ai',
         createdAt: serverTimestamp()
       });
 
@@ -204,6 +207,7 @@ export const MsaidiziModal: React.FC<MsaidiziModalProps> = ({ onClose, contextDa
         userName,
         role: 'model',
         text: data.text,
+        chatType: 'ai',
         createdAt: serverTimestamp()
       });
 
@@ -242,7 +246,7 @@ export const MsaidiziModal: React.FC<MsaidiziModalProps> = ({ onClose, contextDa
               <h3 className="text-xl font-extrabold text-stone-900 font-display">
                 Msaidizi wa AI (VIP)
               </h3>
-              <p className="text-stone-500 text-sm leading-relaxed">
+              <p className="text-stone-700 text-sm leading-relaxed">
                 Fundseed Msaidizi anapatikana kwa watumiaji wa akaunti za VIP pekee. Boresha akaunti yako ili uweze kuuliza maswali yoyote na kupata usaidizi wa papo hapo kuhusu michakato ya ruzuku.
               </p>
             </div>
@@ -280,7 +284,7 @@ export const MsaidiziModal: React.FC<MsaidiziModalProps> = ({ onClose, contextDa
               <h3 className="font-extrabold text-stone-900 font-display flex items-center gap-2">
                 Fundseed Msaidizi
               </h3>
-              <p className="text-[11px] font-medium text-stone-500">Live Support & Majibu ya Akili</p>
+              <p className="text-[11px] font-medium text-stone-500">Majibu ya Akili (AI Assistant)</p>
             </div>
           </div>
           
@@ -310,27 +314,16 @@ export const MsaidiziModal: React.FC<MsaidiziModalProps> = ({ onClose, contextDa
           {activeMessages.map((msg, i) => (
             <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {msg.role !== 'user' && (
-                <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center border ${
-                  msg.role === 'admin' 
-                    ? 'bg-amber-100 border-amber-200' 
-                    : 'bg-emerald-100 border-emerald-200'
-                }`}>
-                  <Bot className={`w-4 h-4 ${msg.role === 'admin' ? 'text-amber-700' : 'text-emerald-600'}`} />
+                <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center border bg-emerald-100 border-emerald-200">
+                  <Bot className="w-4 h-4 text-emerald-600" />
                 </div>
               )}
               
               <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm shadow-sm border ${
                 msg.role === 'user' 
                   ? 'bg-stone-900 border-stone-900 text-white rounded-br-none' 
-                  : msg.role === 'admin'
-                    ? 'bg-amber-50/90 border-amber-200 text-stone-850 rounded-bl-none'
-                    : 'bg-white border-stone-200 text-stone-800 rounded-bl-none'
+                  : 'bg-white border-stone-200 text-stone-800 rounded-bl-none'
               }`}>
-                {msg.role === 'admin' && (
-                  <span className="block text-[9px] font-black text-amber-600 uppercase tracking-widest mb-1">
-                    Msimamizi (Human Live Support)
-                  </span>
-                )}
                 <MarkdownRenderer content={msg.text} textColor={msg.role === 'user' ? 'text-white' : undefined} />
               </div>
 

@@ -258,11 +258,34 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
           <h2 className="text-3xl font-black text-stone-950 font-display sm:text-5xl tracking-tight leading-tight">
             {isEn ? "International Scholarships Hub" : "Fursa za Masomo Duniani"}
           </h2>
-          <p className="text-stone-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+                      <p className="text-stone-800 text-sm leading-relaxed max-w-2xl mx-auto">
             {isEn 
               ? "We help talented youth with dreams of studying abroad (Masters, PhD, or research). We do the extra work of finding guaranteed scholarships so students don't waste time and money on fake applications or scams."
               : "Tunasaidia vijana wenye vipaji na ndoto za kusoma nje ya nchi (Masters, PhD, au tafiti). Tunafanya kazi ya ziada ya kutafuta scholarship za uhakika ili mwanafunzi asipoteze muda na pesa kwenye maombi ya uongo au scams."}
           </p>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <button 
+              onClick={() => {
+                const el = document.getElementById('ai-matcher-tool');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-stone-900 hover:bg-emerald-600 text-white font-bold text-xs px-6 py-3.5 transition-all shadow-md group cursor-pointer"
+            >
+              <Sparkles className="h-4 w-4 mr-2 text-emerald-400" />
+              <span>{isEn ? "Start AI Recommendation Quiz" : "Anza Quiz ya Mapendekezo ya AI"}</span>
+            </button>
+            <button 
+              onClick={() => {
+                const el = document.getElementById('success-kit');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white border border-stone-300 text-stone-700 hover:bg-stone-50 font-bold text-xs px-6 py-3.5 transition-all shadow-sm cursor-pointer"
+            >
+              <BookOpen className="h-4 w-4 mr-2 text-stone-400" />
+              <span>{isEn ? "Application Success Kit" : "Kifurushi cha Mafanikio"}</span>
+            </button>
+          </div>
         </div>
 
         {/* 2. Important Notice - The Trust Marker */}
@@ -284,7 +307,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 max-w-5xl mx-auto border-b border-stone-200 pb-4">
             <div>
-              <h3 className="text-xl font-extrabold text-stone-900 font-display">
+              <h3 className="text-xl font-extrabold text-stone-900 font-display text-emerald-950">
                 {isEn ? "Featured Global Scholarships" : "Mipango Mashuhuri Iliyothibitishwa"}
               </h3>
               <p className="text-stone-500 text-xs">
@@ -380,14 +403,14 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
               <div className="absolute inset-0 bg-stone-900/60 backdrop-blur-md z-10 flex flex-col items-center justify-center p-4">
                 <div className="rounded-2xl bg-white p-6 sm:p-10 border border-stone-200/90 shadow-2xl max-w-2xl w-full mx-auto space-y-6 text-center animate-fade-in">
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber-50 text-amber-600 border border-amber-200">
-                    <LockKeyhole className="h-6 w-6 text-amber-605 animate-pulse" />
+                    <LockKeyhole className="h-6 w-6 text-amber-600 animate-pulse" />
                   </div>
                   
                   <div className="space-y-2.5">
-                    <h3 className="text-2xl font-black text-stone-950 font-display">
+                    <h3 className="text-2xl font-black text-stone-950 font-display text-emerald-950">
                       {isEn ? "Premium Scholarship Catalog & AI Matcher" : "Hifadhidata ya Scholarships 50+ & AI Matcher"}
                     </h3>
-                    <p className="text-sm text-stone-600 leading-relaxed max-w-xl mx-auto">
+                    <p className="text-sm text-stone-800 leading-relaxed max-w-xl mx-auto">
                       {isEn
                         ? "Accessing our validated list of over 50+ elite scholarship sites and our custom Scholarship AI Recommendation Engine is reserved exclusively for Premium VIP members."
                         : "Huduma ya kuona kurasa na tovuti thabiti za mashirika na ubalozi 50+ zinazotoa ruzuku za masomo kweli pamoja na zana yetu ya kipekee ya Scholarship AI Matching Tool imehifadhiwa kwa wateja wa Premium pekee."}
@@ -404,7 +427,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                       <ShieldCheck className="h-4 w-4 text-emerald-600" />
                       <span>{isEn ? "Premium VIP Gateway Benefits (20,000 TZS):" : "Fungua Milango hii ya Premium kwa TZS 20,000 pekee:"}</span>
                     </div>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-stone-600">
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-stone-800">
                       <li className="flex items-center space-x-1.5">
                         <span className="text-emerald-500 font-black">Hapa:</span>
                         <span>{isEn ? "50+ Global Portfolios" : "Orodha ya vyombo 50+"}</span>
@@ -531,7 +554,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                             <h4 className="text-sm font-bold text-stone-900 leading-tight">{dbOpp.title}</h4>
                             <p className="text-[10px] text-stone-400 mt-0.5">Wigo: {dbOpp.eligibility?.join(', ') || 'Global'}</p>
                           </div>
-                          <p className="text-stone-605 text-[11px] leading-relaxed line-clamp-3">
+                          <p className="text-stone-600 text-[11px] leading-relaxed line-clamp-3">
                             {dbOpp.description}
                           </p>
                         </div>
@@ -559,7 +582,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
               </div>
 
               {/* AI matching tool section */}
-              <div className="rounded-2xl border border-stone-200 bg-zinc-950 text-white p-6 sm:p-10 space-y-6">
+              <div id="ai-matcher-tool" className="rounded-2xl border border-stone-200 bg-zinc-950 text-white p-6 sm:p-10 space-y-6">
                 <div>
                   <div className="flex items-center space-x-2">
                     <Sparkles className="h-5 w-5 text-emerald-400" />
@@ -574,7 +597,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
 
                 <form onSubmit={handleAIMatch} className="grid gap-4 sm:grid-cols-4 items-end bg-zinc-900 p-5 rounded-xl border border-zinc-800">
                   <div className="space-y-1.5 text-xs">
-                    <label className="font-bold text-stone-300">Ngazi yako ya Elimu</label>
+                    <label className="font-bold text-stone-600 text-[11px] uppercase tracking-wider">Ngazi yako ya Elimu</label>
                     <select
                       value={academicLevel}
                       onChange={(e) => setAcademicLevel(e.target.value)}
@@ -587,7 +610,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                   </div>
 
                   <div className="space-y-1.5 text-xs">
-                    <label className="font-bold text-stone-300">Kozi yako (e.g. Kilimo, IT)</label>
+                    <label className="font-bold text-stone-600 text-[11px] uppercase tracking-wider">Kozi yako (e.g. Kilimo, IT)</label>
                     <input
                       type="text"
                       required
@@ -599,7 +622,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                   </div>
 
                   <div className="space-y-1.5 text-xs">
-                    <label className="font-bold text-stone-300">Nchi unayopendelea</label>
+                    <label className="font-bold text-stone-600 text-[11px] uppercase tracking-wider">Nchi unayopendelea</label>
                     <select
                       value={countryOfInterest}
                       onChange={(e) => setCountryOfInterest(e.target.value)}
@@ -666,7 +689,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                     Usaidizi wa Karibu na VIP
                   </span>
                   <h4 className="text-xl font-bold font-display text-white">Je, Unaandika Maombi Sasa Hivi?</h4>
-                  <p className="text-xs text-stone-300 leading-relaxed max-w-xl">
+                  <p className="text-xs text-stone-500 leading-relaxed max-w-xl">
                     Jiunge na kundi letu rasmi la WhatsApp upate msaada wa masaa 24/7 kutoka kwa washauri kukiwemo mafundisho kila Jumamosi na templates za bure za SOP.
                   </p>
                 </div>
@@ -690,7 +713,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
             <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full uppercase tracking-wider">
               Success Gallery (Galari ya Mafanikio)
             </span>
-            <h3 className="text-2xl font-extrabold text-stone-900 font-display mt-2">Success Gallery: Watanzania Waliotoboa Ndoto Zao</h3>
+            <h3 className="text-2xl font-extrabold text-stone-900 font-display mt-2 text-emerald-950">Success Gallery: Watanzania Waliotoboa Ndoto Zao</h3>
             <p className="text-xs text-stone-500">Mashuhuda halisi waliomudu mchakato mzima kupitia mafunzo na mifumo yetu na kupata ufadhili wa masomo duniani</p>
           </div>
 
@@ -780,7 +803,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                     {/* Current Position / Current Status */}
                     <div className="flex items-center space-x-2 text-[10px] sm:text-xs text-stone-500 bg-amber-50/50 border border-amber-100 p-2.5 rounded-xl">
                       <span className="font-bold text-amber-800">Sasa hivi:</span>
-                      <span className="font-medium text-stone-605 leading-relaxed">{scholar.location}</span>
+                      <span className="font-medium text-stone-600 leading-relaxed">{scholar.location}</span>
                     </div>
                   </div>
 
@@ -816,7 +839,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
         {/* 6. Benefits Section / Faida za Scholarship */}
         <div className="max-w-5xl mx-auto space-y-8">
           <div className="text-center space-y-2">
-            <h3 className="text-xl font-bold text-stone-900 font-display">Je, Kwa Nini Ukimbilie Scholarships?</h3>
+            <h3 className="text-xl font-bold text-stone-900 font-display text-emerald-950">Je, Kwa Nini Ukimbilie Scholarships?</h3>
             <p className="text-stone-500 text-xs">Mambo mashuhuri matano yanayoweka fursa hizi mbele kuliko mikopo</p>
           </div>
 
@@ -836,7 +859,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
         </div>
 
         {/* 7. Scholarship Application Success Kit with Interactive Checklists & Smart-Draft Links */}
-        <div id="scholarships-success-kit" className="max-w-5xl mx-auto space-y-10 scroll-mt-20">
+        <div id="success-kit" className="max-w-5xl mx-auto space-y-10 scroll-mt-20">
           <div className="text-center space-y-3">
             <div className="inline-flex items-center space-x-1 bg-emerald-50 text-emerald-800 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
               <span>Kifurushi cha Mafanikio (Application Prep Kit)</span>
@@ -909,7 +932,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                         <span className="text-lg">✍️</span>
                         <h4 className="text-base font-extrabold text-stone-900 font-display">Kuandika "Statement of Purpose" (SOP) yenye Kuvutia</h4>
                       </div>
-                      <p className="text-xs text-stone-605 leading-relaxed">
+                      <p className="text-xs text-stone-800 leading-relaxed">
                         SOP ni fursa ya kueleza usiku na mchana wako kimasomo, shauku na namna utakavyorudisha mchango kwa taifa la Tanzania. Haipaswi kuwa marudio ya CV, bali ni hadithi ya uhalisia wako.
                       </p>
                     </div>
@@ -1016,7 +1039,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                         <span className="text-lg">Mail:</span>
                         <h4 className="text-base font-bold text-stone-900 font-display">Kupata Barua za Mapendekezo (Letters of Rec - LOR) zenye Mashiko</h4>
                       </div>
-                      <p className="text-xs text-stone-605 leading-relaxed">
+                      <p className="text-xs text-stone-800 leading-relaxed">
                         Lipa heshima kwa waandishi wako wa mapendekezo lakini washawishi kwa muhtasari (brag-sheet) ili andiko lao liwe mchanganyiko sahihi wa tathmini na mifano.
                       </p>
                     </div>
@@ -1122,7 +1145,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                         <span className="text-lg"></span>
                         <h4 className="text-base font-bold text-stone-900 font-display">Kusafisha na Kusawazisha CV Kupita Kompyuta (ATS Reader)</h4>
                       </div>
-                      <p className="text-xs text-stone-605 leading-relaxed">
+                      <p className="text-xs text-stone-800 leading-relaxed">
                         Mifumo ya kisasa hutumia akili bandia ya ATS (Applicant Tracking Systems) inayochuja na kuondoa CV zenye muundo mbaya, mifano ya kienyeji au picha, kabla mwanadamu hajazitathmini.
                       </p>
                     </div>

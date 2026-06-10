@@ -11,7 +11,10 @@
     @apply text-[16px] antialiased scroll-smooth;
   }
   body {
-    @apply bg-stone-50 text-stone-800 overflow-x-hidden;
+    @apply bg-stone-50 text-stone-800 overflow-x-hidden transition-colors duration-300;
+  }
+  .dark body {
+    @apply bg-stone-950 text-stone-100;
   }
   button, a {
     @apply touch-manipulation;

@@ -272,7 +272,7 @@ export default function GrantMatchingQuiz({
 
                     <div className={`h-5 w-5 rounded-full border flex items-center justify-center transition-all ${
                       isSelected 
-                        ? 'bg-emerald-605 border-emerald-600 text-white' 
+                        ? 'bg-emerald-600 border-emerald-600 text-white' 
                         : 'bg-white border-stone-300 text-transparent'
                     }`}>
                       <Check className="h-3 w-3" />
@@ -345,7 +345,7 @@ export default function GrantMatchingQuiz({
               <button
                 type="button"
                 onClick={() => setCurrentStep(0)}
-                className="px-4 py-2 rounded-xl border border-stone-200 hover:bg-stone-50 text-stone-605 text-xs font-bold cursor-pointer"
+                className="px-4 py-2 rounded-xl border border-stone-200 hover:bg-stone-50 text-stone-600 text-xs font-bold cursor-pointer"
               >
                 {isEn ? "Back to Start" : "Rudi Mwanzo"}
               </button>

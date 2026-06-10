@@ -150,6 +150,7 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
     latestText: string; 
     latestTime: any; 
     messagesCount: number; 
+    chatType: 'ai' | 'support';
     messages: any[] 
   }>();
 
@@ -165,16 +166,20 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
         latestText: msg.text,
         latestTime: msg.createdAt,
         messagesCount: 1,
+        chatType: msg.chatType || 'support',
         messages: [msg]
       });
     } else {
       const session = sessionsMap.get(sid)!;
       session.messagesCount += 1;
-      session.messages.push(msg); // Prepend or append depending on render
+      session.messages.push(msg);
     }
   });
 
   const chatSessions = Array.from(sessionsMap.values());
+  const supportSessions = chatSessions.filter(s => s.chatType === 'support');
+  const aiSessions = chatSessions.filter(s => s.chatType === 'ai');
+  
   const selectedSession = selectedSessionId ? sessionsMap.get(selectedSessionId) : null;
   // Sort chat thread oldest-first for classic chat display flow
   const activeChatThread = selectedSession 
@@ -199,6 +204,7 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
         userName: selectedSession.userName,
         role: 'admin',
         text: text,
+        chatType: selectedSession.chatType,
         createdAt: serverTimestamp()
       });
     } catch (err) {
@@ -258,10 +264,10 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
             onClick={() => setActiveTab('support_chat')}
           >
             <MessageSquare className="w-4 h-4" />
-            Live Chat Support ({chatSessions.length})
-            {chatSessions.length > 0 && (
+            Live Chat Support ({supportSessions.length})
+            {supportSessions.length > 0 && (
               <span className="absolute -top-1.5 -right-1 bg-amber-500 text-stone-950 font-black text-[9px] w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-white">
-                {chatSessions.length}
+                {supportSessions.length}
               </span>
             )}
           </button>
@@ -436,18 +442,18 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
               {/* Left Column: Chat Sessions List */}
               <div className="lg:col-span-4 flex flex-col min-h-0 bg-stone-50">
                 <div className="p-4 border-b border-stone-200 shrink-0 bg-white">
-                  <h3 className="font-extrabold text-stone-900 text-sm">Wateja Kwenye Live Chat ({chatSessions.length})</h3>
+                  <h3 className="font-extrabold text-stone-900 text-sm">Wateja Kwenye Live Chat ({supportSessions.length})</h3>
                   <p className="text-[11px] text-stone-400">Chagua mteja ili kuingia kwenye mazungumzo ya live chat.</p>
                 </div>
                 
                 <div className="flex-1 overflow-y-auto divide-y divide-stone-200">
-                  {chatSessions.length === 0 ? (
+                  {supportSessions.length === 0 ? (
                     <div className="p-8 text-center text-stone-400 text-xs mt-10">
                       <MessageSquare className="w-8 h-8 mx-auto stroke-1.5 mb-2.5" />
                       Hakuna meseji za sapoti zilizopo kwa sasa.
                     </div>
                   ) : (
-                    chatSessions.map((session) => {
+                    supportSessions.map((session) => {
                       const isActive = selectedSessionId === session.sessionId;
                       return (
                         <button
@@ -457,15 +463,12 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
                             isActive ? 'bg-emerald-50/80 border-l-4 border-emerald-600' : 'hover:bg-stone-100/50'
                           }`}
                         >
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center text-white shrink-0 font-bold uppercase shadow-sm">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-400 flex items-center justify-center text-white shrink-0 font-bold uppercase shadow-sm">
                             {(session.userName || 'U')[0]}
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex justify-between items-start gap-1">
                               <h4 className="font-black text-stone-900 text-xs truncate leading-none">{session.userName}</h4>
-                              <span className="text-[9px] font-bold text-stone-400 shrink-0 uppercase">
-                                {session.messagesCount} meseji
-                              </span>
                             </div>
                             <p className="text-[11px] font-mono text-stone-500 truncate leading-none mt-1">{session.userEmail}</p>
                             <p className="text-[11px] text-stone-600 truncate mt-1.5 font-medium italic">

@@ -34,6 +34,7 @@ import {
   ChevronRight,
   Quote,
   Sprout,
+  Bot,
   MapPin,
   Award,
   MessageSquare,
@@ -64,6 +65,8 @@ import ContactForm from './components/ContactForm';
 import AdminDashboard from './components/AdminDashboard';
 import { subscriptionService } from './lib/subscriptionService';
 import PaymentModal from './components/PaymentModal';
+import { MsaidiziModal } from './components/MsaidiziModal';
+import SupportChat from './components/SupportChat';
 
 // Resolves real official application web links for opportunities
 export const getOpportunityLink = (opp: any): string => {
@@ -107,6 +110,10 @@ export const getOpportunityLink = (opp: any): string => {
 export default function App() {
   // Page Title and Dynamic Google SEO Setup
   useEffect(() => {
+    // Force light mode and cleanup dark mode artifacts
+    document.documentElement.classList.remove('dark');
+    localStorage.removeItem('fundseed_theme');
+    
     document.title = "FundSeed | Ruzuku, Ufadhili wa ruzuku na Biashara - Kilimo biashara Tanzania na Business planning AI";
     
     // Inject SEO meta description
@@ -150,6 +157,8 @@ export default function App() {
   const [showContactModal, setShowContactModal] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [showMsaidizi, setShowMsaidizi] = useState<boolean>(false);
+  const [showSupport, setShowSupport] = useState<boolean>(false);
 
   // PWA Install Prompt State
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -163,6 +172,12 @@ export default function App() {
     };
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
+
+  useEffect(() => {
+    const handleOpenMsaidizi = () => setShowMsaidizi(true);
+    window.addEventListener('open-ai-assistant', handleOpenMsaidizi);
+    return () => window.removeEventListener('open-ai-assistant', handleOpenMsaidizi);
   }, []);
 
   const handleInstallPWA = () => {
@@ -876,7 +891,7 @@ export default function App() {
               </h4>
               <ul className="grid gap-2 sm:grid-cols-2">
                 {opp.eligibility.map((crit: string, cIdx: number) => (
-                  <li key={cIdx} className="flex items-start space-x-1.5 text-stone-605">
+                  <li key={cIdx} className="flex items-start space-x-1.5 text-stone-600">
                     <span className="text-emerald-650 font-bold shrink-0 text-xs text-emerald-600">✔</span>
                     <span>{crit}</span>
                   </li>
@@ -954,7 +969,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 font-sans text-stone-800 antialiased selection:bg-emerald-200">
+    <div className="min-h-screen bg-stone-50 font-sans text-stone-800 antialiased selection:bg-emerald-200 selection:text-emerald-900 transition-colors duration-300">
       
       {showAuthModal && <Auth onClose={() => setShowAuthModal(false)} />}
       {showPaymentModal && (
@@ -974,7 +989,7 @@ export default function App() {
       <header className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
         currentPage === 'home' 
           ? 'border-white/10 bg-stone-950/45 backdrop-blur-md text-white' 
-          : 'border-stone-200 bg-white/90 backdrop-blur-md'
+          : 'border-stone-200 bg-white/90 backdrop-blur-md text-stone-900'
       }`}>
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           
@@ -1001,7 +1016,7 @@ export default function App() {
           </div>
 
           {/* Desktop Navigation links */}
-          <nav className={`hidden md:flex items-center space-x-6 text-sm font-medium ${currentPage === 'home' ? 'text-stone-300' : 'text-stone-605'}`}>
+          <nav className={`hidden md:flex items-center space-x-6 text-sm font-medium ${currentPage === 'home' ? 'text-stone-300' : 'text-stone-800'}`}>
             <a 
               href="#/"
               onClick={(e) => {
@@ -1013,7 +1028,7 @@ export default function App() {
               className={`transition-all duration-250 pb-1 ${
                 currentPage === 'home' 
                   ? 'text-emerald-400 font-extrabold border-b-2 border-emerald-400'
-                  : 'text-stone-600 hover:text-emerald-600'
+                  : 'text-stone-700 hover:text-emerald-600 font-bold'
               }`}
             >
               {uiTranslations.navHome[lang]}
@@ -1024,7 +1039,7 @@ export default function App() {
               className={`transition-all duration-205 pb-1 ${
                 currentPage === 'grants' 
                   ? 'text-emerald-450 font-extrabold border-b-2 border-emerald-500' 
-                  : (currentPage === 'home' ? 'text-stone-300 hover:text-emerald-400' : 'text-stone-605 hover:text-emerald-605')
+                  : (currentPage === 'home' ? 'text-stone-300 hover:text-emerald-400' : 'text-stone-700 hover:text-emerald-600 font-bold')
               }`}
             >
               {uiTranslations.navGrants[lang]}
@@ -1035,7 +1050,7 @@ export default function App() {
               className={`transition-all duration-205 pb-1 ${
                 currentPage === 'scholarships' 
                   ? 'text-emerald-455 font-extrabold border-b-2 border-emerald-500' 
-                  : (currentPage === 'home' ? 'text-stone-300 hover:text-emerald-400' : 'text-stone-600 hover:text-emerald-605')
+                  : (currentPage === 'home' ? 'text-stone-300 hover:text-emerald-400' : 'text-stone-700 hover:text-emerald-600 font-bold')
               }`}
             >
               {uiTranslations.navScholarships[lang]}
@@ -1046,7 +1061,7 @@ export default function App() {
               className={`transition-all duration-205 pb-1 ${
                 currentPage === 'academy'
                   ? 'text-emerald-455 font-extrabold border-b-2 border-emerald-500'
-                  : (currentPage === 'home' ? 'text-stone-300 hover:text-emerald-400' : 'text-stone-600 hover:text-emerald-605')
+                  : (currentPage === 'home' ? 'text-stone-300 hover:text-emerald-400' : 'text-stone-700 hover:text-emerald-600 font-bold')
               }`}
             >
               {lang === 'sw' ? 'Funding Academy' : 'Funding Academy'}
@@ -1057,7 +1072,7 @@ export default function App() {
               className={`transition-all duration-205 pb-1 ${
                 currentPage === 'mentorship'
                   ? 'text-emerald-455 font-extrabold border-b-2 border-emerald-500'
-                  : (currentPage === 'home' ? 'text-stone-300 hover:text-emerald-400' : 'text-stone-600 hover:text-emerald-605')
+                  : (currentPage === 'home' ? 'text-stone-300 hover:text-emerald-400' : 'text-stone-700 hover:text-emerald-600 font-bold')
               }`}
             >
               {uiTranslations.navMentorship[lang]}
@@ -1068,7 +1083,7 @@ export default function App() {
               className={`transition-all duration-205 pb-1 ${
                 currentPage === 'dashboard'
                   ? 'text-emerald-455 font-extrabold border-b-2 border-emerald-500'
-                  : (currentPage === 'home' ? 'text-stone-300 hover:text-emerald-400' : 'text-stone-605 hover:text-emerald-605')
+                  : (currentPage === 'home' ? 'text-stone-300 hover:text-emerald-400' : 'text-stone-700 hover:text-emerald-600 font-bold')
               }`}
             >
               {uiTranslations.navDashboard[lang]}
@@ -1077,8 +1092,8 @@ export default function App() {
             {/* Quick anchors available when on Home */}
             {currentPage === 'home' && (
               <div className="flex items-center space-x-4 pl-4 border-l border-white/20">
-                <a href="#ushuhuda" className="text-xs text-stone-400 hover:text-emerald-400 transition-colors">{lang === 'sw' ? 'Ushuhuda' : 'Testimonials'}</a>
-                <a href="#bei" className="text-xs text-stone-400 hover:text-emerald-405 transition-colors">{lang === 'sw' ? 'Bei' : 'Pricing'}</a>
+                <a href="#ushuhuda" className="text-xs text-stone-500 hover:text-emerald-400 transition-colors">{lang === 'sw' ? 'Ushuhuda' : 'Testimonials'}</a>
+                <a href="#bei" className="text-xs text-stone-500 hover:text-emerald-405 transition-colors">{lang === 'sw' ? 'Bei' : 'Pricing'}</a>
               </div>
             )}
           </nav>
@@ -1176,7 +1191,7 @@ export default function App() {
 
         {/* Mobile Navigation Expansion Drawer */}
         {mobileMenuOpen && (
-          <div className="border-t border-stone-100 bg-white/80 backdrop-blur-md px-4 py-4 md:hidden shadow-lg space-y-3">
+          <div className="border-t border-stone-100 bg-white/95 backdrop-blur-md px-4 py-4 md:hidden shadow-lg space-y-3">
             <a 
               href="#/" 
               onClick={() => { setMobileMenuOpen(false); window.location.hash = '#/'; }}
@@ -1425,12 +1440,12 @@ export default function App() {
                     <h3 className="text-white font-bold mb-1.5 font-display text-lg flex items-center space-x-1.5">
                       <span>Business Plan: Salama Poultry Farm</span>
                     </h3>
-                    <p className="text-stone-400 text-xs mb-4">Wilaya ya Kigamboni, Dar es Salaam — Imeandikwa na AI</p>
+                  <p className="text-stone-500 text-xs mb-4">Wilaya ya Kigamboni, Dar es Salaam — Imeandikwa na AI</p>
 
                     <div className="space-y-4 text-sm max-h-[290px] overflow-y-auto pr-2 scrollbar-thin">
                       <div className="rounded-lg bg-stone-950 p-3 border border-stone-800">
                         <p className="font-bold text-stone-300 text-xs mb-1 uppercase">1. Executive Summary</p>
-                        <p className="text-xs text-stone-400 leading-relaxed">
+                        <p className="text-xs text-stone-500 leading-relaxed">
                           "Salama Organic Poultry Farm inaleta mapinduzi ya afya nchini kwa kuzalisha kuku safi wa kienyeji na mayai ya uhakika kulishwa chakula cha mimea yenye afya asilia..."
                         </p>
                       </div>
@@ -1498,7 +1513,7 @@ export default function App() {
             <p className="text-3xl font-extrabold text-stone-900 font-display sm:text-4xl">
               Kuwawezesha Watanzania kufikia ndoto zao
             </p>
-            <p className="text-stone-605 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+            <p className="text-stone-800 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
               Mission ya FundSeed ni kuwawezesha Watanzania kufikia ndoto zao za kiuchumi na kitaaluma kwa kuwapa taarifa sahihi, fursa za uhakika za ufadhili, na miongozo ya kibiashara inayojengwa kwenye msingi wa ukweli na usalama.
             </p>
             <div className="h-1 w-16 bg-emerald-500 mx-auto rounded-full"></div>
@@ -1663,7 +1678,7 @@ export default function App() {
 
           {/* Swipe helper dots indicator showing scroll alignment */}
           <div className="flex items-center justify-center space-x-2 mt-4 sm:hidden">
-            <span className="text-[10px] text-stone-400 italic">← Swipia kushoto au kulia kuona zaidi →</span>
+            <span className="text-[10px] text-stone-500 italic">← Swipia kushoto au kulia kuona zaidi →</span>
           </div>
 
         </div>
@@ -1692,7 +1707,7 @@ export default function App() {
                 <Phone className="h-6 w-6" />
               </div>
               <h3 className="text-lg font-bold text-stone-900 font-display mb-2">Register & Pay</h3>
-              <p className="text-stone-605 text-sm leading-relaxed">
+              <p className="text-stone-600 text-sm leading-relaxed">
                 Jisajili kwa urahisi ukitumia namba yako ya simu na kulipia ada ya uanachama ya mara moja tu ya 20,000 TZS kwa njia rahisi kabisa ya simu asilia nchini.
               </p>
             </div>
@@ -1706,7 +1721,7 @@ export default function App() {
                 <Sparkles className="h-6 w-6" />
               </div>
               <h3 className="text-lg font-bold text-stone-900 font-display mb-2">Zalisha kwa AI (Generate)</h3>
-              <p className="text-stone-605 text-sm leading-relaxed">
+              <p className="text-stone-600 text-sm leading-relaxed">
                 Jaza herufi na maelezo machache kuhusu wazo lako kwenye zana yetu thabiti ya Smart-Draft™. AI yetuitaandaa hati yenye kina cha juu ndani ya sekunde 30 tu.
               </p>
             </div>
@@ -1720,7 +1735,7 @@ export default function App() {
                 <Briefcase className="h-6 w-6" />
               </div>
               <h3 className="text-lg font-bold text-stone-900 font-display mb-2">Tuma Maombi (Apply)</h3>
-              <p className="text-stone-605 text-sm leading-relaxed">
+              <p className="text-stone-600 text-sm leading-relaxed">
                 Pakua hati yako na kuituma kwenye fursa mbalimbali za kusisimua zilizothibitishwa katika orodha yetu fursa halali nchini Tanzania na kote duniani.
               </p>
             </div>
@@ -2283,8 +2298,8 @@ export default function App() {
                     </div>
                   ) : (
                     /* Pre-generation empty guidance */
-                    <div className="h-full flex flex-col items-center justify-center space-y-4 py-20 text-center text-stone-400">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-stone-50 border border-stone-100 text-stone-300">
+                    <div className="h-full flex flex-col items-center justify-center space-y-4 py-20 text-center text-stone-500">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-stone-50 border border-stone-100 text-stone-500">
                         <FileText className="h-8 w-8" />
                       </div>
                       <div className="space-y-1 max-w-xs mx-auto">
@@ -2351,8 +2366,8 @@ export default function App() {
             <h2 className="text-3xl font-extrabold text-stone-900 font-display sm:text-4xl">
               Fursa za Ufadhili kwa Biashara Zetu
             </h2>
-            <p className="text-stone-605 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-              Tunapunguza tatizo la mtaji kwa wafanyabiashara wadogo na wa kati. Tunatafuta, kuchuja, na kuleta ruzuku (grants) na fursa za mitaji ili kusaidia biashara zianze, zikue, na ziwe endelevu.
+            <p className="text-stone-800 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+              Tunapunguza tatizo la mtaji kwa wafanyabiashara wadogo na wa kati. Tunatafuta, kuchuja, na kuleta ruzuku (grants) na fursa za mitaji ili kusaidie biashara zianze, zikue, na ziwe endelevu.
             </p>
           </div>
 
@@ -2370,7 +2385,7 @@ export default function App() {
                   
                   <div className="space-y-2">
                     <h3 className="text-2xl font-extrabold text-stone-950 font-display">Hub ya Ufadhili Imefungwa</h3>
-                    <p className="text-sm text-stone-605 leading-relaxed">
+                    <p className="text-sm text-stone-600 leading-relaxed">
                       Maktaba hii ina taarifa za kina za majukwaa na wavuti 50+ za sasa zinazotoa ruzuku (Grants) na mikopo isiyo na riba kwa wajasiriamali nchini Tanzania kama vile SIDO, TADB, PASS, Tony Elumelu, na USADF.
                     </p>
                     <p className="text-xs text-stone-500 font-medium">
@@ -2446,7 +2461,7 @@ export default function App() {
                         {fake.category}
                       </span>
                       <h4 className="text-base font-bold text-stone-900 mt-2">{fake.title}</h4>
-                      <p className="text-xs text-stone-400 font-medium">Mtoa Huduma: {fake.provider}</p>
+                      <p className="text-xs text-stone-600 font-bold">Mtoa Huduma: {fake.provider}</p>
                     </div>
                     <div className="text-right">
                       <span className="text-[10px] text-stone-400 block">Kiwango cha Juu</span>
@@ -2580,7 +2595,7 @@ export default function App() {
                                       : 'Opportunities Tailored to Your Profile'}
                                   </span>
                                 </h3>
-                                <p className="text-stone-605 text-xs leading-relaxed">
+                                <p className="text-stone-600 text-xs leading-relaxed">
                                   {lang === 'sw'
                                     ? `Zilizopendekezwa kulingana na mambo unayopenda: ${userInterests.map(i => i === 'Agriculture' ? 'Kilimo' : i === 'Healthcare' ? 'Afya' : i === 'Education' ? 'Elimu' : i === 'Tech' ? 'Teknolojia' : i === 'Women' ? 'Wanawake' : i === 'Youth' ? 'Vijana' : i).join(', ')}`
                                     : `Tailored matching recommendations based on your quiz: ${userInterests.join(', ')}`}
@@ -2666,7 +2681,7 @@ export default function App() {
             <p className="text-3xl font-extrabold text-stone-900 font-display sm:text-4xl">
               Wamefanikiwa Kupata Ufadhili
             </p>
-            <p className="text-stone-600 text-sm leading-relaxed max-w-xl mx-auto">
+            <p className="text-stone-800 text-sm leading-relaxed max-w-xl mx-auto">
               Tazama miradi halisi ya wajasiriamali wa Kitanzania waliotumia zana zetu kujaza hati za kitaalamu na sasa wamefanikiwa kukuza ndoto zao kwa vitendo.
             </p>
             <div className="h-1 w-16 bg-emerald-500 mx-auto rounded-full"></div>
@@ -3247,13 +3262,13 @@ export default function App() {
                     <span className="text-5xl font-black tracking-tight text-stone-950">20,000</span>
                     <span className="ml-2 text-lg font-bold text-stone-500">TZS</span>
                   </div>
-                  <p className="text-xs text-stone-400 mt-1">Malipo ya mara moja tu (One-time Access Fee)</p>
+                  <p className="text-xs text-stone-500 mt-1">Malipo ya mara moja tu (One-time Access Fee)</p>
                 </div>
 
                 <div className="space-y-3.5 pt-4 border-t border-stone-100 text-sm">
                   <p className="font-bold text-stone-900 text-xs block uppercase tracking-wider">Nini Kimejumuishwa:</p>
                   
-                  <ul className="space-y-2.5 text-xs text-stone-660">
+                  <ul className="space-y-2.5 text-xs text-stone-800 font-medium">
                     <li className="flex items-center space-x-2.5">
                       <span className="text-emerald-500 font-bold">✔</span>
                       <span>Ufikiaji kamili wa fursa 50+ za ruzuku</span>
@@ -3309,7 +3324,7 @@ export default function App() {
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 
-                <p className="text-[10px] text-stone-400 font-medium">
+                <p className="text-[10px] text-stone-500 font-medium">
                   Utachukuliwa kwenye fomu ya usajili na malipo (M-Pesa, Tigo Pesa, nk.)
                 </p>
               </div>
@@ -3359,7 +3374,7 @@ export default function App() {
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-[10px] font-bold text-emerald-800 shrink-0 mt-0.5">S</span>
                   <span>{faq.q}</span>
                 </h3>
-                <p className="text-xs text-stone-605 leading-relaxed pl-7">
+                <p className="text-xs text-stone-600 leading-relaxed pl-7">
                   {faq.a}
                 </p>
               </div>
@@ -3593,6 +3608,95 @@ export default function App() {
       </footer>
 
       {/* Payment Modal for VIP Activation */}
+      {showPaymentModal && (
+        <PaymentModal 
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          onSuccess={handlePaymentSuccess}
+          user={currentUser}
+        />
+      )}
+
+      {/* Global Fundseed Msaidizi Chat Support */}
+      {showMsaidizi && !showAdminDashboard && (
+        <MsaidiziModal 
+          onClose={() => setShowMsaidizi(false)}
+          isPaid={isPaid}
+          currentUser={currentUser || {}}
+          onUpgradeRequest={handleNavigateToCheckout}
+          contextData={`Mtumiaji yuko kwenye ukurasa wa: ${currentPage}. Lugha iliyochaguliwa: ${lang === 'sw' ? 'Kiswahili' : 'Kiingereza'}.`}
+        />
+      )}
+
+      {/* Human Global Support Chat */}
+      {showSupport && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-stone-900/50 backdrop-blur-sm p-4 animate-fade-in shadow-2xl">
+          <div className="w-full max-w-lg relative">
+            <button 
+              onClick={() => setShowSupport(false)}
+              className="absolute -top-12 right-0 text-white hover:text-stone-200 flex items-center gap-2 font-bold"
+            >
+              <X className="h-6 w-6" /> {lang === 'sw' ? 'Funga Chat' : 'Close Chat'}
+            </button>
+            {/* Using the SupportChat component specifically for human-to-human support */}
+            <SupportChat user={currentUser || user} />
+          </div>
+        </div>
+      )}
+
+      {/* Floating Menu for AI & Support */}
+      <div className="fixed bottom-6 right-6 z-[90] flex flex-col items-end gap-3">
+        <AnimatePresence>
+          {mobileMenuOpen && (
+             <motion.div
+               initial={{ opacity: 0, y: 20, scale: 0.9 }}
+               animate={{ opacity: 1, y: 0, scale: 1 }}
+               exit={{ opacity: 0, y: 20, scale: 0.9 }}
+               className="flex flex-col gap-3 mb-3 items-end"
+             >
+               <button 
+                 onClick={() => { setShowSupport(true); setMobileMenuOpen(false); }}
+                 className="flex items-center gap-3 bg-blue-600 text-white px-4 py-3 rounded-2xl shadow-xl shadow-blue-200/50 hover:bg-blue-700 transition-all group"
+               >
+                 <div className="text-right">
+                   <p className="text-sm font-bold">Zungumza na Mtu (Live)</p>
+                   <p className="text-[10px] text-blue-100">Live Support msaidizi wa kibinadamu</p>
+                 </div>
+                 <div className="h-10 w-10 bg-blue-500/50 text-white rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                   <MessageSquare className="h-5 w-5" />
+                 </div>
+               </button>
+
+               <button 
+                 onClick={() => { setShowMsaidizi(true); setMobileMenuOpen(false); }}
+                 className="flex items-center gap-3 bg-stone-900 text-white px-4 py-3 rounded-2xl shadow-xl shadow-stone-200/50 hover:bg-emerald-600 transition-all group"
+               >
+                 <div className="text-right">
+                   <p className="text-sm font-bold">Uliza Bot (AI)</p>
+                   <p className="text-[10px] text-stone-400">Maswali ya kisheria na miongozo</p>
+                 </div>
+                 <div className="h-10 w-10 bg-stone-800 text-white rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                   <Bot className="h-5 w-5" />
+                 </div>
+               </button>
+             </motion.div>
+          )}
+        </AnimatePresence>
+
+        <button 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className={`h-14 w-14 rounded-2xl flex items-center justify-center shadow-2xl transition-all duration-300 ${mobileMenuOpen ? 'bg-stone-900 rotate-90' : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/40 hover:scale-110'}`}
+        >
+          {mobileMenuOpen ? <X className="h-6 w-6 text-white" /> : (
+            <div className="relative">
+              <Bot className="h-7 w-7 text-white" />
+              <div className="absolute -top-1 -right-1 h-3.5 w-3.5 bg-red-500 rounded-full border-2 border-white flex items-center justify-center">
+                 <div className="h-1.5 w-1.5 bg-white rounded-full animate-ping"></div>
+              </div>
+            </div>
+          )}
+        </button>
+      </div>
     </div>
   );
 }
