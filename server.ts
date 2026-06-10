@@ -811,9 +811,7 @@ Mazingira ya sasa kuhusu mambo ya ruzuku (ikiwa yapo): ${contextData || 'Hakuna 
     }
     fullPrompt += `Mteja: ${message}`;
 
-    const response = await sendMessageWithRetry(chat, {
-      message: fullPrompt
-    });
+    const response = await sendMessageWithRetry(chat, fullPrompt);
 
     res.json({ text: response.text });
   } catch (error: any) {

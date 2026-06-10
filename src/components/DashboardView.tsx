@@ -1397,7 +1397,7 @@ export default function DashboardView({
             setShowMsaidizi(false);
             onUnlockPremium();
           }}
-          contextData={JSON.stringify(dbOpps)}
+          contextData={JSON.stringify(dbOpps.map(opp => ({ title: opp.title, provider: opp.provider, amount: opp.amount, deadline: opp.deadline, category: opp.category })))}
         />
       )}
     </div>

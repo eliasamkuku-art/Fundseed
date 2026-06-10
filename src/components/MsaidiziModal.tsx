@@ -331,7 +331,7 @@ export const MsaidiziModal: React.FC<MsaidiziModalProps> = ({ onClose, contextDa
                     Msimamizi (Human Live Support)
                   </span>
                 )}
-                <MarkdownRenderer content={msg.text} />
+                <MarkdownRenderer content={msg.text} textColor={msg.role === 'user' ? 'text-white' : undefined} />
               </div>
 
               {msg.role === 'user' && (
