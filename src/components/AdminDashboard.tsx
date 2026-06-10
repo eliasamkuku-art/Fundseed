@@ -159,19 +159,23 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
     const sid = msg.sessionId;
     if (!sid) return;
 
-    if (!sessionsMap.has(sid)) {
-      sessionsMap.set(sid, {
+    // Create a unique key for grouping by both user and context
+    const type = msg.chatType || 'support';
+    const key = `${sid}_${type}`;
+
+    if (!sessionsMap.has(key)) {
+      sessionsMap.set(key, {
         sessionId: sid,
         userEmail: msg.userEmail || '',
         userName: msg.userName || 'Mtumiaji Fundseed',
         latestText: msg.text,
         latestTime: msg.createdAt,
         messagesCount: 1,
-        chatType: msg.chatType || 'support',
+        chatType: type as 'ai' | 'support',
         messages: [msg]
       });
     } else {
-      const session = sessionsMap.get(sid)!;
+      const session = sessionsMap.get(key)!;
       session.messagesCount += 1;
       session.messages.push(msg);
     }
@@ -181,13 +185,19 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
   const supportSessions = chatSessions.filter(s => s.chatType === 'support');
   const aiSessions = chatSessions.filter(s => s.chatType === 'ai');
   
+  // We now use the composite key (sid_type) for selection
   const selectedSession = selectedSessionId ? sessionsMap.get(selectedSessionId) : null;
   // Sort chat thread oldest-first for classic chat display flow
+  // We use a more robust sorting that handles latent (un-filled) server timestamps for local writes
   const activeChatThread = selectedSession 
     ? [...selectedSession.messages].sort((a, b) => {
-        const aTime = a.createdAt?.seconds || 0;
-        const bTime = b.createdAt?.seconds || 0;
-        return aTime - bTime;
+        const getMs = (ca: any) => {
+          if (!ca) return Date.now(); // If null/undefined (local write before sync)
+          if (typeof ca.toMillis === 'function') return ca.toMillis();
+          if (ca.seconds) return ca.seconds * 1000;
+          return Date.now();
+        };
+        return getMs(a.createdAt) - getMs(b.createdAt);
       })
     : [];
 
@@ -200,7 +210,7 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
       setReplyInput('');
 
       await addDoc(collection(db, 'chat_messages'), {
-        sessionId: selectedSessionId,
+        sessionId: selectedSession.sessionId,
         userEmail: selectedSession.userEmail,
         userName: selectedSession.userName,
         role: 'admin',
@@ -493,11 +503,12 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
                       </div>
                     ) : (
                       (supportSubTab === 'live' ? supportSessions : aiSessions).map((session) => {
-                        const isActive = selectedSessionId === session.sessionId;
+                        const compositeId = `${session.sessionId}_${session.chatType}`;
+                        const isActive = selectedSessionId === compositeId;
                         return (
                           <button
-                            key={session.sessionId}
-                            onClick={() => setSelectedSessionId(session.sessionId)}
+                            key={compositeId}
+                            onClick={() => setSelectedSessionId(compositeId)}
                             className={`w-full text-left p-4 transition-all flex gap-3 cursor-pointer ${
                               isActive 
                                 ? supportSubTab === 'live' ? 'bg-blue-50/80 border-l-4 border-blue-600' : 'bg-emerald-50/80 border-l-4 border-emerald-600'

@@ -30,7 +30,7 @@ export default function SupportChat({ user }: { user: any }) {
         collection(db, 'chat_messages'), 
         where('sessionId', '==', sessionId),
         where('chatType', '==', 'support'),
-        orderBy('timestamp', 'asc')
+        orderBy('createdAt', 'asc')
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setMessages(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
@@ -65,10 +65,11 @@ export default function SupportChat({ user }: { user: any }) {
     await addDoc(collection(db, 'chat_messages'), {
       text: newMessage,
       sessionId: user.uid,
-      sender: user.name || 'Anonymous',
-      senderEmail: user.email || 'anonymous@fundseed.com',
+      userName: user.name || 'Anonymous',
+      userEmail: user.email || 'anonymous@fundseed.com',
+      role: 'user',
       chatType: 'support',
-      timestamp: serverTimestamp()
+      createdAt: serverTimestamp()
     });
     setNewMessage('');
   };
@@ -87,11 +88,11 @@ export default function SupportChat({ user }: { user: any }) {
       
       <div className="flex-1 overflow-y-auto space-y-4 mb-6 pr-2">
         {messages.map(msg => (
-          <div key={msg.id} className={`flex flex-col ${msg.senderEmail === user.email ? 'items-end' : 'items-start'}`}>
-            <div className={`p-4 rounded-2xl max-w-[85%] text-sm ${msg.senderEmail === user.email ? 'bg-emerald-600 text-white rounded-br-none' : 'bg-stone-100 text-stone-800 rounded-bl-none'}`}>
+          <div key={msg.id} className={`flex flex-col ${msg.role === 'admin' || msg.userEmail !== user.email ? 'items-start' : 'items-end'}`}>
+            <div className={`p-4 rounded-2xl max-w-[85%] text-sm ${msg.role === 'admin' || msg.userEmail !== user.email ? 'bg-stone-100 text-stone-800 rounded-bl-none' : 'bg-emerald-600 text-white rounded-br-none'}`}>
               <p>{msg.text}</p>
             </div>
-            <span className="text-[10px] text-stone-500 mt-1 px-1">{msg.sender}</span>
+            <span className="text-[10px] text-stone-500 mt-1 px-1">{msg.role === 'admin' ? 'FundSeed Team' : (msg.userName || msg.sender)}</span>
           </div>
         ))}
         <div ref={chatEndRef} />
