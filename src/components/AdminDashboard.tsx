@@ -35,6 +35,7 @@ const chartData = [
 
 export default function AdminDashboard({ onClose }: { onClose: () => void }) {
   const [activeTab, setActiveTab] = useState<'opportunities' | 'users' | 'support_chat'>('opportunities');
+  const [supportSubTab, setSupportSubTab] = useState<'live' | 'ai'>('live');
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [editingOpp, setEditingOpp] = useState<Opportunity | null>(null);
 
@@ -261,12 +262,16 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
             className={`px-4.5 py-2.5 rounded-xl font-bold flex items-center gap-2 text-xs transition-all cursor-pointer relative ${
               activeTab === 'support_chat' ? 'bg-white text-emerald-800 shadow-sm font-black' : 'text-stone-600 hover:bg-stone-200/50'
             }`} 
-            onClick={() => setActiveTab('support_chat')}
+            onClick={() => {
+              setActiveTab('support_chat');
+              setSupportSubTab('live');
+              setSelectedSessionId(null);
+            }}
           >
             <MessageSquare className="w-4 h-4" />
-            Live Chat Support ({supportSessions.length})
+            Msaada na Support ({supportSessions.length})
             {supportSessions.length > 0 && (
-              <span className="absolute -top-1.5 -right-1 bg-amber-500 text-stone-950 font-black text-[9px] w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-white">
+              <span className="absolute -top-1.5 -right-1 bg-blue-500 text-white font-black text-[9px] w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-white">
                 {supportSessions.length}
               </span>
             )}
@@ -437,143 +442,209 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
           )}
 
           {activeTab === 'support_chat' && (
-            <div className="grid grid-cols-1 lg:grid-cols-12 bg-white rounded-2xl shadow-sm border border-stone-200 flex-1 min-h-0 divide-x divide-stone-200 overflow-hidden">
+            <div className="flex flex-col flex-1 min-h-0 bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden mb-4">
               
-              {/* Left Column: Chat Sessions List */}
-              <div className="lg:col-span-4 flex flex-col min-h-0 bg-stone-50">
-                <div className="p-4 border-b border-stone-200 shrink-0 bg-white">
-                  <h3 className="font-extrabold text-stone-900 text-sm">Wateja Kwenye Live Chat ({supportSessions.length})</h3>
-                  <p className="text-[11px] text-stone-400">Chagua mteja ili kuingia kwenye mazungumzo ya live chat.</p>
-                </div>
+              {/* Sub-tabs for Support */}
+              <div className="flex border-b border-stone-200 bg-stone-50/50 p-1">
+                <button 
+                  onClick={() => { setSupportSubTab('live'); setSelectedSessionId(null); }}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-xs font-bold rounded-xl transition-all ${
+                    supportSubTab === 'live' 
+                      ? 'bg-white text-blue-600 shadow-sm' 
+                      : 'text-stone-500 hover:bg-stone-100'
+                  }`}
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  Live Chat Support ({supportSessions.length})
+                </button>
+                <button 
+                  onClick={() => { setSupportSubTab('ai'); setSelectedSessionId(null); }}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-xs font-bold rounded-xl transition-all ${
+                    supportSubTab === 'ai' 
+                      ? 'bg-white text-emerald-600 shadow-sm' 
+                      : 'text-stone-500 hover:bg-stone-100'
+                  }`}
+                >
+                  <Bot className="w-4 h-4" />
+                  AI Msaidizi Logs ({aiSessions.length})
+                </button>
+              </div>
+
+              <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-0 divide-x divide-stone-200">
                 
-                <div className="flex-1 overflow-y-auto divide-y divide-stone-200">
-                  {supportSessions.length === 0 ? (
-                    <div className="p-8 text-center text-stone-400 text-xs mt-10">
-                      <MessageSquare className="w-8 h-8 mx-auto stroke-1.5 mb-2.5" />
-                      Hakuna meseji za sapoti zilizopo kwa sasa.
+                {/* Left Column: Chat Sessions List */}
+                <div className="lg:col-span-4 flex flex-col min-h-0 bg-stone-50/30">
+                  <div className="p-4 border-b border-stone-200 shrink-0 bg-white">
+                    <h3 className="font-extrabold text-stone-900 text-sm">
+                      {supportSubTab === 'live' ? 'Wateja Kwenye Live Chat' : 'Mazungumzo ya AI'} ({supportSubTab === 'live' ? supportSessions.length : aiSessions.length})
+                    </h3>
+                    <p className="text-[11px] text-stone-400">
+                      {supportSubTab === 'live' 
+                        ? 'Chagua mteja ili kuingia kwenye mazungumzo ya live chat.' 
+                        : 'Review mazungumzo ya mteja na Msaidizi wa AI.'}
+                    </p>
+                  </div>
+                  
+                  <div className="flex-1 overflow-y-auto divide-y divide-stone-100">
+                    {(supportSubTab === 'live' ? supportSessions : aiSessions).length === 0 ? (
+                      <div className="p-8 text-center text-stone-400 text-xs mt-10">
+                        {supportSubTab === 'live' ? <MessageSquare className="w-8 h-8 mx-auto stroke-1.5 mb-2.5" /> : <Bot className="w-8 h-8 mx-auto stroke-1.5 mb-2.5" />}
+                        Hakuna mazungumzo yoyote yaliyopo kwa sasa.
+                      </div>
+                    ) : (
+                      (supportSubTab === 'live' ? supportSessions : aiSessions).map((session) => {
+                        const isActive = selectedSessionId === session.sessionId;
+                        return (
+                          <button
+                            key={session.sessionId}
+                            onClick={() => setSelectedSessionId(session.sessionId)}
+                            className={`w-full text-left p-4 transition-all flex gap-3 cursor-pointer ${
+                              isActive 
+                                ? supportSubTab === 'live' ? 'bg-blue-50/80 border-l-4 border-blue-600' : 'bg-emerald-50/80 border-l-4 border-emerald-600'
+                                : 'hover:bg-stone-50'
+                            }`}
+                          >
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 font-bold uppercase shadow-sm ${
+                              supportSubTab === 'live' ? 'bg-gradient-to-br from-blue-500 to-indigo-400' : 'bg-gradient-to-br from-emerald-500 to-teal-400'
+                            }`}>
+                              {(session.userName || 'U')[0]}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex justify-between items-start gap-1">
+                                <h4 className="font-black text-stone-900 text-xs truncate leading-none">{session.userName}</h4>
+                                <span className="text-[8px] text-stone-400 shrink-0 font-mono">
+                                  {session.messagesCount} msg
+                                </span>
+                              </div>
+                              <p className="text-[10px] font-mono text-stone-400 truncate leading-none mt-1">{session.userEmail || 'No Email'}</p>
+                              <p className="text-[11px] text-stone-600 truncate mt-1.5 font-medium italic">
+                                "{session.latestText}"
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+
+                {/* Right Column: Chat History and Response Area */}
+                <div className="lg:col-span-8 flex flex-col min-h-0 bg-white">
+                  {selectedSession ? (
+                    <div className="flex-1 flex flex-col min-h-0 relative">
+                      
+                      {/* Thread Header */}
+                      <div className="p-4 border-b border-stone-200 shrink-0 bg-stone-50/50 flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-black ${
+                            supportSubTab === 'live' ? 'bg-blue-600' : 'bg-emerald-600'
+                          }`}>
+                           {(selectedSession.userName || 'U')[0]}
+                          </div>
+                          <div>
+                            <h3 className="font-extrabold text-stone-900 uppercase text-xs">{selectedSession.userName}</h3>
+                            <p className="text-[10px] font-mono text-stone-400">{selectedSession.userEmail || 'Anonymous User'}</p>
+                          </div>
+                        </div>
+                        
+                        <div className={`flex items-center gap-1.5 rounded-lg px-3 py-1 border ${
+                          supportSubTab === 'live' 
+                            ? 'bg-blue-50 border-blue-200 text-blue-700' 
+                            : 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                        }`}>
+                          {supportSubTab === 'live' ? <Clock className="w-3 h-3" /> : <Bot className="w-3 h-3" />}
+                          <span className="text-[10px] font-bold uppercase tracking-wider">
+                            {supportSubTab === 'live' ? 'Live Support Channel' : 'AI Msaidizi History'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Messages Area */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-stone-50/20">
+                        {activeChatThread.map((msg, idx) => (
+                          <div key={idx} className={`flex gap-2.5 ${msg.role === 'admin' ? 'justify-end' : 'justify-start'}`}>
+                            {msg.role !== 'admin' && (
+                              <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center border shadow-xs ${
+                                msg.role === 'model' ? 'bg-stone-100 border-stone-200' : 'bg-white border-stone-200'
+                              }`}>
+                                {msg.role === 'model' ? <Bot className="w-4 h-4 text-emerald-600" /> : <User className="w-4 h-4 text-stone-400" />}
+                              </div>
+                            )}
+
+                            <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm shadow-xs border ${
+                              msg.role === 'admin'
+                                ? 'bg-blue-600 border-blue-700 text-white rounded-br-none'
+                                : msg.role === 'model'
+                                  ? 'bg-emerald-50 border-emerald-100 text-stone-800 rounded-bl-none'
+                                  : 'bg-white border-stone-200 text-stone-800 rounded-bl-none'
+                            }`}>
+                              <span className={`block text-[8px] font-black uppercase tracking-widest mb-1.5 opacity-60 ${msg.role === 'admin' ? 'text-blue-100' : msg.role === 'model' ? 'text-emerald-700' : 'text-stone-400'}`}>
+                                {msg.role === 'admin' ? 'Msimamizi (Wewe)' : msg.role === 'model' ? 'FundSeed AI' : 'Mteja'}
+                              </span>
+                              <div className={msg.role === 'admin' ? 'prose-invert' : ''}>
+                                <MarkdownRenderer content={msg.text} />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        <div ref={chatMessagesEndRef} />
+                      </div>
+
+                      {/* Support Input Controls - Only for Live Support or if admin wants to intervene in AI chat?? */}
+                      {/* For now, let's allow replying in both, but usually AI chats are readonly logs */}
+                      <div className="p-4 border-t border-stone-200 shrink-0 bg-white">
+                        <div className={`flex items-end gap-2 bg-stone-50 border rounded-2xl p-1 shadow-inner transition-colors ${
+                          supportSubTab === 'live' ? 'focus-within:border-blue-400 border-stone-200' : 'focus-within:border-emerald-400 border-stone-200'
+                        }`}>
+                          <textarea
+                            value={replyInput}
+                            onChange={(e) => setReplyInput(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSendAdminReply();
+                              }
+                            }}
+                            placeholder={supportSubTab === 'live' ? `Jibu ${selectedSession.userName}...` : `Ingilia kati mazungumzo (Jibu kama Admin)...`}
+                            className="flex-1 max-h-24 min-h-[44px] bg-transparent border-0 focus:ring-0 resize-none p-3 text-sm text-stone-800 placeholder:text-stone-400"
+                            rows={1}
+                          />
+                          <button
+                            onClick={handleSendAdminReply}
+                            disabled={!replyInput.trim()}
+                            className={`p-3 mb-1 mr-1 rounded-xl text-white transition-all cursor-pointer shadow-sm disabled:bg-stone-200 disabled:text-stone-400 flex items-center justify-center ${
+                              supportSubTab === 'live' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-emerald-600 hover:bg-emerald-700'
+                            }`}
+                          >
+                            <Send className="w-4 h-4" />
+                          </button>
+                        </div>
+                        {supportSubTab === 'ai' && (
+                          <p className="text-[10px] text-center text-stone-400 mt-2">Kumbuka: Unajibu mazungumzo ambayo mteja anaongea na AI hapa.</p>
+                        )}
+                      </div>
+
                     </div>
                   ) : (
-                    supportSessions.map((session) => {
-                      const isActive = selectedSessionId === session.sessionId;
-                      return (
-                        <button
-                          key={session.sessionId}
-                          onClick={() => setSelectedSessionId(session.sessionId)}
-                          className={`w-full text-left p-4 transition-all flex gap-3 cursor-pointer ${
-                            isActive ? 'bg-emerald-50/80 border-l-4 border-emerald-600' : 'hover:bg-stone-100/50'
-                          }`}
-                        >
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-400 flex items-center justify-center text-white shrink-0 font-bold uppercase shadow-sm">
-                            {(session.userName || 'U')[0]}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex justify-between items-start gap-1">
-                              <h4 className="font-black text-stone-900 text-xs truncate leading-none">{session.userName}</h4>
-                            </div>
-                            <p className="text-[11px] font-mono text-stone-500 truncate leading-none mt-1">{session.userEmail}</p>
-                            <p className="text-[11px] text-stone-600 truncate mt-1.5 font-medium italic">
-                              "{session.latestText}"
-                            </p>
-                          </div>
-                        </button>
-                      );
-                    })
+                    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-stone-400 space-y-4">
+                      <div className={`w-16 h-16 border-2 border-dashed rounded-full flex items-center justify-center ${
+                        supportSubTab === 'live' ? 'border-blue-200 text-blue-200' : 'border-emerald-200 text-emerald-200'
+                      }`}>
+                        {supportSubTab === 'live' ? <MessageSquare className="w-8 h-8" /> : <Bot className="w-8 h-8" />}
+                      </div>
+                      <div>
+                        <h4 className="font-extrabold text-stone-800 text-sm">Chagua mazungumzo yoyote</h4>
+                        <p className="text-xs text-stone-500 mt-1 max-w-xs mx-auto">
+                          {supportSubTab === 'live' 
+                            ? 'Chagua dondoo ya mteja upande wa kushoto ili uweze kujibu live chat.' 
+                            : 'Chagua mazungumzo ya AI ili kuona jinsi bot inavyowasaidia wateja.'}
+                        </p>
+                      </div>
+                    </div>
                   )}
                 </div>
+
               </div>
-
-              {/* Right Column: Chat History and Response Area */}
-              <div className="lg:col-span-8 flex flex-col min-h-0 bg-white">
-                {selectedSession ? (
-                  <div className="flex-1 flex flex-col min-h-0 relative">
-                    
-                    {/* Thread Header */}
-                    <div className="p-4 border-b border-stone-200 shrink-0 bg-stone-50 flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-sm font-black">
-                         {(selectedSession.userName || 'U')[0]}
-                        </div>
-                        <div>
-                          <h3 className="font-extrabold text-stone-900 uppercase text-xs">{selectedSession.userName}</h3>
-                          <p className="text-[10px] font-mono text-stone-550">{selectedSession.userEmail}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-1 bg-amber-50 rounded-lg px-2.5 py-1 border border-amber-200">
-                        <Clock className="w-3 h-3 text-amber-700" />
-                        <span className="text-[10px] text-amber-800 font-bold">Wasilisho la Live Support</span>
-                      </div>
-                    </div>
-
-                    {/* Messages Area */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#fafcfa]">
-                      {activeChatThread.map((msg, idx) => (
-                        <div key={idx} className={`flex gap-2.5 ${msg.role === 'admin' ? 'justify-end' : 'justify-start'}`}>
-                          {msg.role !== 'admin' && (
-                            <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center border ${
-                              msg.role === 'model' ? 'bg-stone-100 border-stone-300' : 'bg-emerald-100 border-emerald-250'
-                            }`}>
-                              {msg.role === 'model' ? <Bot className="w-4 h-4 text-emerald-700" /> : <User className="w-4 h-4 text-stone-600" />}
-                            </div>
-                          )}
-
-                          <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm shadow-sm border ${
-                            msg.role === 'admin'
-                              ? 'bg-amber-500 border-amber-500 text-stone-950 rounded-br-none font-medium'
-                              : msg.role === 'model'
-                                ? 'bg-stone-50 border-stone-200 text-stone-600 rounded-bl-none'
-                                : 'bg-white border-stone-200 text-stone-850 rounded-bl-none'
-                          }`}>
-                            <span className="block text-[8px] font-black uppercase tracking-widest mb-1.5 opacity-60">
-                              {msg.role === 'admin' ? 'Msimamizi (Wewe)' : msg.role === 'model' ? 'AI Assistant System' : 'Mteja / Mjasiriamali'}
-                            </span>
-                            <MarkdownRenderer content={msg.text} />
-                          </div>
-                        </div>
-                      ))}
-                      <div ref={chatMessagesEndRef} />
-                    </div>
-
-                    {/* Support Input Controls */}
-                    <div className="p-4 border-t border-stone-200 shrink-0 bg-white">
-                      <div className="flex items-end gap-2 bg-stone-50 border border-stone-200 rounded-2xl p-1 shadow-inner">
-                        <textarea
-                          value={replyInput}
-                          onChange={(e) => setReplyInput(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !e.shiftKey) {
-                              e.preventDefault();
-                              handleSendAdminReply();
-                            }
-                          }}
-                          placeholder={`Jibu ${selectedSession.userName}...`}
-                          className="flex-1 max-h-24 min-h-[44px] bg-transparent border-0 focus:ring-0 resize-none p-3 text-sm text-stone-800 placeholder:text-stone-400"
-                          rows={1}
-                        />
-                        <button
-                          onClick={handleSendAdminReply}
-                          disabled={!replyInput.trim()}
-                          className="p-3 mb-1 mr-1 rounded-xl bg-amber-500 text-stone-950 disabled:bg-stone-200 disabled:text-stone-400 hover:bg-amber-400 transition-colors cursor-pointer"
-                        >
-                          <Send className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-
-                  </div>
-                ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-stone-400 space-y-4">
-                    <div className="w-14 h-14 bg-stone-50 border border-stone-200 rounded-full flex items-center justify-center text-stone-300">
-                      <MessageSquare className="w-7 h-7 stroke-1.5" />
-                    </div>
-                    <div>
-                      <h4 className="font-extrabold text-stone-800 text-sm">Chagua mazungumzo ya wateja</h4>
-                      <p className="text-xs text-stone-500 mt-1">Chagua dondoo ya mteja yeyote upande wa kushoto ili uweze kusoma nakala ya soga na kujibu live chat.</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
             </div>
           )}
 
