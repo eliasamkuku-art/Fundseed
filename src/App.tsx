@@ -2479,15 +2479,18 @@ export default function App() {
                 <div className="grid gap-4 md:grid-cols-12 items-center">
                   
                   {/* Search text-field */}
-                  <div className="md:col-span-5 relative">
+                  <div className="md:col-span-5 relative group">
                     <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
                     <input
                       type="text"
-                      placeholder="Tafuta ruzuku au taasisi (e.g. TADB, SIDO, Tony Elumelu)..."
+                      placeholder={lang === 'en' ? "Search for grants or providers (e.g. TADB, SIDO, Tony Elumelu)..." : "Tafuta ruzuku au taasisi (e.g. TADB, SIDO, Tony Elumelu)..."}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="w-full rounded-xl border border-stone-300 bg-white pl-10 pr-3.5 py-2.5 text-sm text-stone-900 focus:border-emerald-600 focus:outline-none placeholder-stone-400"
                     />
+                    <div className="absolute left-0 -bottom-8 hidden group-hover:block z-10 w-full text-xs bg-stone-800 text-stone-100 p-2 rounded-lg shadow-lg">
+                      {lang === 'en' ? "You can search by provider name (e.g., SIDO) or specific grant category keywords (e.g., agriculture, youth)." : "Unaweza kutafuta kwa jina la taasisi (mf. SIDO) au maneno muhimu ya kundi la ruzuku (mf. kilimo, vijana)."}
+                    </div>
                   </div>
 
                   {/* Category selector */}
@@ -3560,8 +3563,9 @@ export default function App() {
               <p className="leading-relaxed">
                 Jukwaa la kidijitali la kuandaa andishi la mradi na kuunganisha wajasiriamali na fursa za ruzuku katika sekta zote Tanzania.
               </p>
-              <div className="flex items-center space-x-3 text-stone-200">
+              <div className="flex flex-col space-y-1 text-stone-200">
                 <span>Mawasiliano: <strong>info@fundseed.co.tz</strong></span>
+                <span>WhatsApp: <strong>+255704699888</strong></span>
               </div>
             </div>
 

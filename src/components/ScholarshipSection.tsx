@@ -417,8 +417,8 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                     </p>
                     <p className="text-xs text-stone-500 font-medium max-w-lg mx-auto">
                       {isEn
-                        ? "Process a one-time 20,000 TZS registration to unlock these tools, receive expert SOP drafting guidelines, and join our private VIP community group."
-                        : "Lipia ada ya mara moja ya TZS 20,000 kupata huduma hii ya kipekee, usaidizi wa kitaalamu wa maombi ya masomo, na kujiunga na kikundi maalum cha siri cha WhatsApp cha VIP kwa usaidizi vya karibu!"}
+                        ? "Process a one-time 20,000 TZS registration to unlock these tools, receive expert SOP drafting guidelines, and get priority VIP WhatsApp support access."
+                        : "Lipia ada ya mara moja ya TZS 20,000 kupata huduma hii ya kipekee, usaidizi wa kitaalamu wa maombi ya masomo, na kupata msaada wa karibu wa VIP kupitia WhatsApp!"}
                     </p>
                   </div>
 
@@ -442,7 +442,7 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                       </li>
                       <li className="flex items-center space-x-1.5">
                         <span className="text-emerald-500 font-black">Hapa:</span>
-                        <span>{isEn ? "Direct WhatsApp VIP Group Channel" : "WhatsApp VIP Group Link"}</span>
+                        <span>{isEn ? "Direct WhatsApp Support: +255704699888" : "Msaada wa WhatsApp: +255704699888"}</span>
                       </li>
                     </ul>
                   </div>
@@ -690,18 +690,18 @@ export default function ScholarshipSection({ isPaid, onUnlockPremium, checkoutRe
                   </span>
                   <h4 className="text-xl font-bold font-display text-white">Je, Unaandika Maombi Sasa Hivi?</h4>
                   <p className="text-xs text-stone-500 leading-relaxed max-w-xl">
-                    Jiunge na kundi letu rasmi la WhatsApp upate msaada wa masaa 24/7 kutoka kwa washauri kukiwemo mafundisho kila Jumamosi na templates za bure za SOP.
+                    Tuma ujumbe kwenye namba yetu rasmi ya WhatsApp (+255 704 699 888) upate msaada wa masaa 24/7 kutoka kwa washauri kukiwemo mafundisho kila Jumamosi na templates za bure za SOP.
                   </p>
                 </div>
                 
                 <a
-                  href="https://chat.whatsapp.com/invite/dummyFundSeedGroup"
+                  href="https://wa.me/255704699888"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-xs px-6 py-4 shadow-md transition-all flex items-center justify-center space-x-2 shrink-0 border border-green-500"
                 >
                   <MessageSquare className="h-4 w-4 text-white" />
-                  <span>Jiunge na Kikundi cha WhatsApp</span>
+                  <span>Wasiliana Nasi WhatsApp</span>
                 </a>
               </div>
 
